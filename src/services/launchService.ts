@@ -1,9 +1,9 @@
-import { API } from '../config/api';
 import { LAUNCH_CACHE_TTL } from '../config/constants';
 import { fetchJSON } from './httpClient';
 import type { LaunchesResponse } from '../types/launch';
 
 const CACHE_KEY = 'launch_pad_data';
+const PROXY_URL = '/api/launches';
 
 interface CachedData {
   data: LaunchesResponse;
@@ -50,23 +50,33 @@ export async function getUpcomingLaunches(
   const cached = getCached();
   if (cached?.fresh) return cached.data;
 
-  // 2. Try live API
-  const url = `${API.launches.base}${API.launches.upcoming}?limit=${limit}&mode=detailed`;
-  try {
-    const data = await fetchJSON<LaunchesResponse>(url);
-    setCache(data);
-    return data;
-  } catch {
-    // 3. Stale cache
-    if (cached) return cached.data;
+  // 2. Try proxy API (Vercel serverless) → direct API fallback
+  const urls = [
+    `${PROXY_URL}?limit=${limit}`,
+    `https://ll.thespacedevs.com/2.2.0/launch/upcoming/?limit=${limit}&mode=detailed`,
+  ];
 
-    // 4. Build-time prefetched data (always available)
-    const prefetched = await getPrefetched();
-    if (prefetched && prefetched.results.length > 0) {
-      setCache(prefetched);
-      return prefetched;
+  for (const url of urls) {
+    try {
+      const data = await fetchJSON<LaunchesResponse>(url);
+      if (data.results?.length > 0) {
+        setCache(data);
+        return data;
+      }
+    } catch {
+      continue;
     }
-
-    throw new Error('Unable to load launch data. Please try again later.');
   }
+
+  // 3. Stale cache
+  if (cached) return cached.data;
+
+  // 4. Build-time prefetched data
+  const prefetched = await getPrefetched();
+  if (prefetched && prefetched.results.length > 0) {
+    setCache(prefetched);
+    return prefetched;
+  }
+
+  throw new Error('Unable to load launch data. Please try again later.');
 }

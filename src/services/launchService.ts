@@ -3,23 +3,20 @@ import { LAUNCH_CACHE_TTL } from '../config/constants';
 import { fetchJSON, HttpError } from './httpClient';
 import type { LaunchesResponse } from '../types/launch';
 
-const CACHE_KEY = 'space_observer_launches';
+const CACHE_KEY = 'launch_pad_data';
 
 interface CachedData {
   data: LaunchesResponse;
   timestamp: number;
 }
 
-function getCached(): LaunchesResponse | null {
+function getCached(): { data: LaunchesResponse; fresh: boolean } | null {
   try {
-    const raw = sessionStorage.getItem(CACHE_KEY);
+    const raw = localStorage.getItem(CACHE_KEY);
     if (!raw) return null;
     const cached: CachedData = JSON.parse(raw);
-    if (Date.now() - cached.timestamp > LAUNCH_CACHE_TTL) {
-      sessionStorage.removeItem(CACHE_KEY);
-      return null;
-    }
-    return cached.data;
+    const fresh = Date.now() - cached.timestamp < LAUNCH_CACHE_TTL;
+    return { data: cached.data, fresh };
   } catch {
     return null;
   }
@@ -27,7 +24,7 @@ function getCached(): LaunchesResponse | null {
 
 function setCache(data: LaunchesResponse): void {
   try {
-    sessionStorage.setItem(
+    localStorage.setItem(
       CACHE_KEY,
       JSON.stringify({ data, timestamp: Date.now() }),
     );
@@ -41,6 +38,11 @@ export async function getUpcomingLaunches(
 ): Promise<LaunchesResponse> {
   const cached = getCached();
 
+  // Return fresh cache without API call
+  if (cached?.fresh) {
+    return cached.data;
+  }
+
   const url = `${API.launches.base}${API.launches.upcoming}?limit=${limit}&mode=detailed`;
 
   try {
@@ -48,10 +50,11 @@ export async function getUpcomingLaunches(
     setCache(data);
     return data;
   } catch (err) {
-    if (err instanceof HttpError && err.status === 429 && cached) {
-      return cached;
+    // On any error, return stale cache if available
+    if (cached) return cached.data;
+    if (err instanceof HttpError && err.status === 429) {
+      throw new Error('API rate limit reached. Please try again in a few minutes.');
     }
-    if (cached) return cached;
     throw err;
   }
 }

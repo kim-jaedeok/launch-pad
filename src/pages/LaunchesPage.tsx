@@ -8,7 +8,7 @@ import { useUpcomingLaunches } from '../hooks/useUpcomingLaunches';
 import type { Launch } from '../types/launch';
 
 export default function LaunchesPage() {
-  const { launches, isLoading, error, refetch } = useUpcomingLaunches(15);
+  const { launches, isLoading, error, refetch } = useUpcomingLaunches();
   const [selected, setSelected] = useState<Launch | null>(null);
 
   return (

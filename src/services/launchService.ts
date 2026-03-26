@@ -1,5 +1,4 @@
 import { LAUNCH_CACHE_TTL } from '../config/constants';
-import { fetchJSON } from './httpClient';
 import type { LaunchesResponse } from '../types/launch';
 
 const CACHE_KEY = 'launch_pad_data';
@@ -43,32 +42,26 @@ async function getPrefetched(): Promise<LaunchesResponse | null> {
   }
 }
 
-export async function getUpcomingLaunches(
-  limit = 15,
-): Promise<LaunchesResponse> {
-  // 1. Fresh localStorage cache
+export async function getUpcomingLaunches(): Promise<LaunchesResponse> {
+  // 1. Fresh client cache
   const cached = getCached();
   if (cached?.fresh) return cached.data;
 
-  // 2. Try proxy API (Vercel serverless) → direct API fallback
-  const urls = [
-    `${PROXY_URL}?limit=${limit}`,
-    `https://ll.thespacedevs.com/2.2.0/launch/upcoming/?limit=${limit}&mode=detailed`,
-  ];
-
-  for (const url of urls) {
-    try {
-      const data = await fetchJSON<LaunchesResponse>(url);
+  // 2. Proxy API only (never call ll.thespacedevs.com directly)
+  try {
+    const res = await fetch(PROXY_URL);
+    if (res.ok) {
+      const data = await res.json() as LaunchesResponse;
       if (data.results?.length > 0) {
         setCache(data);
         return data;
       }
-    } catch {
-      continue;
     }
+  } catch {
+    // proxy unavailable
   }
 
-  // 3. Stale cache
+  // 3. Stale client cache
   if (cached) return cached.data;
 
   // 4. Build-time prefetched data

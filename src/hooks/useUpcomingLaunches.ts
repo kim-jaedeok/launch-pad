@@ -10,7 +10,7 @@ interface UseLaunchesResult {
   refetch: () => void;
 }
 
-export function useUpcomingLaunches(limit = 10): UseLaunchesResult {
+export function useUpcomingLaunches(): UseLaunchesResult {
   const [launches, setLaunches] = useState<Launch[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -18,14 +18,14 @@ export function useUpcomingLaunches(limit = 10): UseLaunchesResult {
   const fetchLaunches = useCallback(async () => {
     try {
       setError(null);
-      const data = await getUpcomingLaunches(limit);
+      const data = await getUpcomingLaunches();
       setLaunches(data.results);
     } catch (err) {
       setError((err as Error).message);
     } finally {
       setIsLoading(false);
     }
-  }, [limit]);
+  }, []);
 
   useEffect(() => {
     fetchLaunches();

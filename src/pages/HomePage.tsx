@@ -46,7 +46,8 @@ function HeroCountdown({ targetDate }: { targetDate: string }) {
 }
 
 export default function HomePage() {
-  const { launches, isLoading, error, refetch } = useUpcomingLaunches(5);
+  const { launches: allLaunches, isLoading, error, refetch } = useUpcomingLaunches();
+  const launches = allLaunches.slice(0, 5);
   const [selected, setSelected] = useState<Launch | null>(null);
   const next = launches[0];
 

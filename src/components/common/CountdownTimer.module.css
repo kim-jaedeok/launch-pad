@@ -1,0 +1,40 @@
+.countdown {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  font-family: var(--font-mono);
+}
+
+.prefix {
+  color: var(--color-accent-red);
+  font-size: var(--font-sm);
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+.value {
+  color: var(--color-text-bright);
+  font-size: var(--font-lg);
+  font-weight: 700;
+}
+
+.unit {
+  color: var(--color-text-secondary);
+  font-size: var(--font-xs);
+  margin-right: 4px;
+}
+
+.sep {
+  color: var(--color-accent-red);
+  font-size: var(--font-lg);
+  font-weight: 700;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.launched {
+  font-family: var(--font-mono);
+  font-size: var(--font-sm);
+  color: var(--color-accent-green);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}

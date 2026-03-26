@@ -1,0 +1,45 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  padding: var(--space-2xl);
+  text-align: center;
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-xl);
+  font-weight: 700;
+  color: var(--color-accent-red);
+  border: 2px solid var(--color-accent-red);
+  border-radius: 50%;
+}
+
+.message {
+  font-size: var(--font-base);
+  color: var(--color-text-secondary);
+}
+
+.retryBtn {
+  padding: var(--space-sm) var(--space-lg);
+  font-family: var(--font-mono);
+  font-size: var(--font-sm);
+  color: var(--color-text-bright);
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: background var(--transition-fast);
+}
+
+.retryBtn:hover {
+  background: var(--color-primary-light);
+}

@@ -1,0 +1,58 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-size: var(--font-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.go {
+  color: var(--color-accent-green);
+  background: rgba(0, 230, 118, 0.1);
+}
+.go .dot {
+  background: var(--color-accent-green);
+  box-shadow: var(--glow-green);
+}
+
+.tbd {
+  color: var(--color-accent-gold);
+  background: rgba(255, 184, 0, 0.1);
+}
+.tbd .dot { background: var(--color-accent-gold); }
+
+.hold {
+  color: var(--color-accent-red);
+  background: rgba(252, 61, 33, 0.1);
+}
+.hold .dot {
+  background: var(--color-accent-red);
+  box-shadow: var(--glow-red);
+}
+
+.success {
+  color: var(--color-primary-glow);
+  background: rgba(79, 195, 247, 0.1);
+}
+.success .dot { background: var(--color-primary-glow); }
+
+.live {
+  color: var(--color-accent-red);
+  background: rgba(252, 61, 33, 0.15);
+}
+.live .dot {
+  background: var(--color-accent-red);
+  animation: pulse 2s ease-in-out infinite;
+}

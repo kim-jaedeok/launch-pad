@@ -1,0 +1,60 @@
+:root {
+  /* Background - Deep Space */
+  --color-bg-primary: #0b0d17;
+  --color-bg-secondary: #1b1d2a;
+  --color-bg-tertiary: #252840;
+  --color-bg-surface: #2e3150;
+
+  /* NASA Blue */
+  --color-primary: #0b3d91;
+  --color-primary-light: #1e88e5;
+  --color-primary-glow: #4fc3f7;
+  --color-primary-dim: #0d47a1;
+
+  /* Accent */
+  --color-accent-red: #fc3d21;
+  --color-accent-gold: #ffb800;
+  --color-accent-green: #00e676;
+  --color-accent-orange: #ff6d00;
+
+  /* Text */
+  --color-text-primary: #e8eaed;
+  --color-text-secondary: #9aa0a6;
+  --color-text-muted: #5f6368;
+  --color-text-bright: #ffffff;
+
+  /* Glow */
+  --glow-blue: 0 0 20px rgba(79, 195, 247, 0.3);
+  --glow-red: 0 0 15px rgba(252, 61, 33, 0.4);
+  --glow-green: 0 0 10px rgba(0, 230, 118, 0.3);
+
+  /* Border */
+  --border-card: 1px solid rgba(79, 195, 247, 0.15);
+  --border-card-hover: 1px solid rgba(79, 195, 247, 0.4);
+  --border-radius: 8px;
+
+  /* Font */
+  --font-display: 'Orbitron', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+  --font-body: 'Inter', -apple-system, sans-serif;
+
+  --font-xs: 0.75rem;
+  --font-sm: 0.875rem;
+  --font-base: 1rem;
+  --font-lg: 1.25rem;
+  --font-xl: 1.5rem;
+  --font-2xl: 2rem;
+  --font-3xl: 3rem;
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+
+  /* Transition */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+}

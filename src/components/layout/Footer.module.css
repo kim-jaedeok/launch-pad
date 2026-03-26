@@ -1,0 +1,18 @@
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-xl);
+  background: var(--color-bg-secondary);
+  border-top: var(--border-card);
+}
+
+.text {
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
+
+.divider {
+  color: var(--color-text-muted);
+}

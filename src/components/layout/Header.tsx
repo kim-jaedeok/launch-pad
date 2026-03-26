@@ -7,7 +7,7 @@ export default function Header() {
     <header className={styles.header}>
       <Link to={ROUTES.home} className={styles.logo}>
         <span className={styles.logoIcon}>&#x1F680;</span>
-        <span>Launch Tracker</span>
+        <span>Launch Pad</span>
       </Link>
       <nav className={styles.nav}>
         <NavLink

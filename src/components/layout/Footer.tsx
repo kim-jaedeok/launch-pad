@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <footer className={styles.footer}>
       <span className={styles.text}>
-        Launch Tracker &copy; {new Date().getFullYear()}
+        Launch Pad &copy; {new Date().getFullYear()}
       </span>
       <span className={styles.divider}>&middot;</span>
       <span className={styles.text}>

@@ -1,6 +1,6 @@
 import { API } from '../config/api';
 import { LAUNCH_CACHE_TTL } from '../config/constants';
-import { fetchJSON, HttpError } from './httpClient';
+import { fetchJSON } from './httpClient';
 import type { LaunchesResponse } from '../types/launch';
 
 const CACHE_KEY = 'launch_pad_data';
@@ -29,32 +29,44 @@ function setCache(data: LaunchesResponse): void {
       JSON.stringify({ data, timestamp: Date.now() }),
     );
   } catch {
-    // Storage full - ignore
+    // Storage full
+  }
+}
+
+async function getPrefetched(): Promise<LaunchesResponse | null> {
+  try {
+    const res = await fetch('/launches.json');
+    if (!res.ok) return null;
+    return await res.json() as LaunchesResponse;
+  } catch {
+    return null;
   }
 }
 
 export async function getUpcomingLaunches(
-  limit = 10,
+  limit = 15,
 ): Promise<LaunchesResponse> {
+  // 1. Fresh localStorage cache
   const cached = getCached();
+  if (cached?.fresh) return cached.data;
 
-  // Return fresh cache without API call
-  if (cached?.fresh) {
-    return cached.data;
-  }
-
+  // 2. Try live API
   const url = `${API.launches.base}${API.launches.upcoming}?limit=${limit}&mode=detailed`;
-
   try {
     const data = await fetchJSON<LaunchesResponse>(url);
     setCache(data);
     return data;
-  } catch (err) {
-    // On any error, return stale cache if available
+  } catch {
+    // 3. Stale cache
     if (cached) return cached.data;
-    if (err instanceof HttpError && err.status === 429) {
-      throw new Error('API rate limit reached. Please try again in a few minutes.');
+
+    // 4. Build-time prefetched data (always available)
+    const prefetched = await getPrefetched();
+    if (prefetched && prefetched.results.length > 0) {
+      setCache(prefetched);
+      return prefetched;
     }
-    throw err;
+
+    throw new Error('Unable to load launch data. Please try again later.');
   }
 }
